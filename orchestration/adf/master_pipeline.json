@@ -1,0 +1,46 @@
+{
+    "name": "PL_Master_BusinessCentral_to_Auditor",
+    "properties": {
+        "activities": [
+            {
+                "name": "Sentinel_Governance_Gate",
+                "type": "AzureFunctionActivity",
+                "dependsOn": [],
+                "userProperties": [],
+                "typeProperties": {
+                    "functionName": "SentinelEngine",
+                    "method": "POST",
+                    "body": "{ 'mode': 'gate', 'source': 'BusinessCentral' }"
+                }
+            },
+            {
+                "name": "Load_S30_ODS",
+                "type": "ExecutePipeline",
+                "dependsOn": [
+                    {
+                        "activity": "Sentinel_Governance_Gate",
+                        "dependencyConditions": ["Succeeded"]
+                    }
+                ],
+                "typeProperties": {
+                    "pipeline": { "referenceName": "PL_Incr_BusinessCentral_S30", "type": "PipelineReference" }
+                }
+            },
+            {
+                "name": "Trigger_Auditor_Webhook",
+                "type": "WebActivity",
+                "dependsOn": [
+                    {
+                        "activity": "Load_S30_ODS",
+                        "dependencyConditions": ["Succeeded"]
+                    }
+                ],
+                "typeProperties": {
+                    "url": "https://api.continuousauditor.com/v1/ingest",
+                    "method": "POST",
+                    "body": "{ 'status': 'validated', 'timestamp': '@{pipeline().TriggerTime}' }"
+                }
+            }
+        ]
+    }
+}
