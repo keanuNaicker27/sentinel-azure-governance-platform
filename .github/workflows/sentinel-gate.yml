@@ -1,0 +1,29 @@
+name: "Sentinel: Data Contract Gate"
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allows manual trigger for on-demand validation
+
+jobs:
+  sentinel-circuit-breaker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Sentinel Dependencies
+        run: pip install -r sentinel/requirements.txt
+
+      - name: Execute Sentinel Validation Gate
+        env:
+          BC_CLIENT_SECRET: ${{ secrets.BC_CLIENT_SECRET }}
+          BC_TENANT_ID: ${{ secrets.BC_TENANT_ID }}
+        run: |
+          # The -e flag triggers the 'Circuit Breaker' mode
+          python sentinel/engine.py --mode gate --env prod --strict
+
+      - name: Notify on Contract Failure
+        if: failure()
+        run: |
+          echo "SENTINEL ALERT: Data Contract Breach detected in Business Central API."
+          # Integration with Slack/Teams would go here
