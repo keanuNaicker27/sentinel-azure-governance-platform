@@ -1,0 +1,38 @@
+version: 1.0.0
+dataset: bc_general_ledger
+description: "Core accounting entries from D365 Business Central G/L Entries API"
+owner: "Finance Platform Team"
+source_system: "Dynamics 365 Business Central"
+
+# Define strict constraints that prevent bad data from reaching the ODS
+schema:
+  - column: "entry_no"
+    type: "integer"
+    description: "Primary key from Business Central"
+    constraints:
+      required: true
+      unique: true
+  
+  - column: "posting_date"
+    type: "date"
+    constraints:
+      required: true
+      min_value: "2010-01-01" # Prevent garbage data from legacy migrations
+
+  - column: "amount"
+    type: "decimal(18,2)"
+    constraints:
+      required: true
+      # Sentinel uses this for the 'Smart Refresh' column balance check
+      monitor_for_drift: true 
+
+  - column: "g_l_account_no"
+    type: "string"
+    constraints:
+      pattern: "^[0-9]+$" # Enforce that account numbers must be numeric strings
+
+# FinOps Guardrails
+governance:
+  priority: "high"
+  validation_level: "strict" # Logic: Fail the build if schema drift is detected
+  retention_policy: "7_years"
