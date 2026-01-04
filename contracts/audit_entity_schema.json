@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Continuous Auditor Export Schema",
+  "description": "Standardized output for the Continuous Auditor API trigger",
+  "type": "object",
+  "properties": {
+    "administration_id": {
+      "type": "string",
+      "description": "The unique Business Central environment/tenant ID"
+    },
+    "fiscal_year": {
+      "type": "integer",
+      "minimum": 2020
+    },
+    "transaction_count": {
+      "type": "integer",
+      "description": "Used for reconciliation vs source Business Central count"
+    },
+    "total_debit_amount": {
+      "type": "number"
+    },
+    "total_credit_amount": {
+      "type": "number"
+    },
+    "rgs_mapping_status": {
+      "type": "string",
+      "enum": ["Fully Mapped", "Partial", "Unmapped"],
+      "description": "Only 'Fully Mapped' entities are triggered for audit"
+    }
+  },
+  "required": ["administration_id", "fiscal_year", "transaction_count", "rgs_mapping_status"]
+}
