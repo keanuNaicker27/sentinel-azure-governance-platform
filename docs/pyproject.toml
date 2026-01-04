@@ -1,0 +1,16 @@
+[project]
+name = "sentinel-azure-platform"
+version = "1.0.0"
+description = "Enterprise Governance & FinOps Platform for Business Central"
+authors = [{name = "Keanu Naicker"}]
+dependencies = [
+    "pandas>=2.0.0",
+    "requests>=2.31.0",
+    "azure-storage-filedatalake>=12.14.0",
+    "pyyaml>=6.0.1",
+    "numpy>=1.26.0"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
