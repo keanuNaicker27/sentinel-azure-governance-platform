@@ -12,13 +12,13 @@ Sentinel is not a data pipeline; it is a **Governance Engine**. Built to solve t
 - **Audit-Ready Modeling:** Automated RGS mapping for the **Continuous Auditor API**.
 
 
-## 🛠 Tech Stack
+## Tech Stack
 - **Languages:** Python (Sentinel Engine), SQL (Medallion S10-S50).
 - **Orchestration:** Azure Data Factory + Event-Driven Webhooks.
 - **Security:** Zero-Trust Managed Identities & Azure Key Vault.
 - **Infrastructure:** Terraform (Private Endpoints & VNet Isolation).
 
-## 📂 Quick Start
+## Quick Start
 ```bash
 make setup
 make test
